@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  app:
+    container_name: next_starter
+    build:
+      context: .
+      dockerfile: ./dev.Dockerfile
+    ports:
+      - 3000:3000
+      - 4000:4000
+    volumes:
+      - .:/home/node/app
+      - extensions:/home/node/.vscode-server/extensions
+      - extensions-insiders:/home/node/.vscode-server-insiders/extensions
+      - history:/commandhistory
+
+volumes:
+  extensions:
+  extensions-insiders:
+  history:

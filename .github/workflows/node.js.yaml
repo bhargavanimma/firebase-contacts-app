@@ -1,0 +1,25 @@
+name: Docker Image CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Build the docker-compose stack
+        run: docker-compose -f prod.docker-compose.yaml up --build -d
+      - name: Check running containers
+        run: docker ps -a
+      - name: Check logs
+        run: docker logs next_starter_prod
+      - name: run jest tests
+        run:
+          docker exec -w /home/node/app next_starter_prod npm run test:coverage
+      - name: run cypress tests
+        run: docker exec -w /home/node/app next_starter_prod npm run cy:run
+      - name: run codecov
+        run: docker exec -w /home/node/app next_starter_prod npx codecov
